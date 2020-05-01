@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hybird_web/util/Adapter.dart';
+
+import 'util/asset.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "Ken's blog ",
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -29,20 +33,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    Adapt.init(width.toInt());
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Test"),
-      ),
-      body: Center(
-        child: PhysicalModel(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.blue,
-          child: Container(
-            color: Colors.transparent,
-            child: MaterialButton(
-                onPressed: () {}, child: Text("123",style: TextStyle(color: Colors.white),)),
+      body: Stack(
+        children: <Widget>[
+          Positioned.fill(
+              child: Image.asset(
+            Asset.pathByName("gy_38.jpg"),
+            fit: BoxFit.fill,
+          )),
+          Positioned.fill(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(Adapt.px(15)),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                          width: Adapt.px(145),
+                          child: Image.asset(Asset.pathByName("gy_1.jpg"),)),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
