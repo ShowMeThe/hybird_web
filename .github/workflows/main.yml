@@ -25,7 +25,7 @@ jobs:
           # 改成你的提交用户名
           git config --global user.name showMeThe
           git status
-          git remote add origin https://${{secrets.commit_secret}}@github.com/ShowMeThe/hybird_web.git
+          git remote add origin https://${{secrets.web_commit}}@github.com/ShowMeThe/hybird_web.git
           git checkout -b gh-pages
           git add --all
           git commit -m "update"
