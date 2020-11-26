@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:ui';
 import 'dart:js' as js;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hybird_web/base/vm/ViewModelProvider.dart';
 import 'package:hybird_web/base/vm/ViewModelProviders.dart';
 import 'package:hybird_web/data/Source.dart';
 import 'package:hybird_web/util/asset.dart';
+import 'package:hybird_web/util/px.dart';
 import 'vm/HomeViewModel.dart';
 
 class HomePage extends StatelessWidget {
@@ -63,8 +65,8 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = Px.matchWidth(context);
+    var height = Px.matchHeight(context);
     return Scaffold(
       backgroundColor: Colors.black38,
       body: Stack(
@@ -79,7 +81,7 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
           ),
           Container(
             width: width,
-            height: 200,
+            height: Px.getTitleHeight(),
             child: Stack(
               children: [
                 Hero(
@@ -94,14 +96,16 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
                   opacity: _alphaAnimation,
                   child: Container(
                     width: width,
-                    height: height,
-                    child: Text(
-                      "4K HD WallPaper",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.tealAccent,
-                          fontSize: 125,
-                          fontFamily: "SansitaSwashed"),
+                    height: Px.getTitleHeight(),
+                    child: Center(
+                      child: Text(
+                        "4K HD WallPaper",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.tealAccent,
+                            fontSize: Px.getTitleSize(),
+                            fontFamily: "SansitaSwashed"),
+                      ),
                     ),
                   ),
                 ),
@@ -109,7 +113,7 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
             ),
           ),
           Positioned.fill(
-            top: 300,
+            top: Px.getCardPaddingTop(),
             left: 0,
             right: 0,
             bottom: 0,
@@ -119,27 +123,27 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
                   child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white54,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(45.0),
-                            topRight: Radius.circular(45.0))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                        scrollDirection: Axis.vertical,
-                        controller: _scrollController,
-                        itemBuilder: (context,position){
-                           return _buildView(context,position);
-                        },
-                        itemCount: Source.getCardList().length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            childAspectRatio: 2
+                      decoration: BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(Px.getCardRadius()),
+                              topRight: Radius.circular(Px.getCardRadius()))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.builder(
+                          scrollDirection: Axis.vertical,
+                          controller: _scrollController,
+                          itemBuilder: (context, position) {
+                            return _buildView(context, position);
+                          },
+                          itemCount: Source.getCardList().length,
+                          gridDelegate:SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: Px.getWidth() / 4,
+                              mainAxisSpacing: 20.0,
+                              crossAxisSpacing: 10.0
+                          ),
                         ),
-                      ),
-                    )
-                  ),
+                      )),
                 ),
               ),
             ),
@@ -150,24 +154,37 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
   }
 
   Widget _buildView(BuildContext context, int position) {
-    return GestureDetector(
-      onTap: (){
-        print(Source.getCardList()[position].contentUrl);
-        js.context.callMethod("open",[Source.getCardList()[position].contentUrl]);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-            child: Column(
-                children: [
-                    Image.network(Source.getCardList()[position].imageUrl,fit:BoxFit.cover,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(Source.getCardList()[position].name,style: TextStyle(fontFamily: "NerkoOne",color: Colors.blue,fontSize: 22),),
-                    )
-                ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Material(
+        elevation: 2.0,
+        borderRadius: BorderRadius.circular(Px.getImageCardRadius()),
+        child: GestureDetector(
+          onTap: () {
+            print(Source.getCardList()[position].contentUrl);
+            js.context.callMethod(
+                "open", [Source.getCardList()[position].contentUrl]);
+          },
+          child: Column(
+            children: [
+              Container(
+                decoration: ShapeDecoration(
+                    image: DecorationImage(image: NetworkImage(Source.getCardList()[position].imageUrl),fit: BoxFit.fitWidth),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusDirectional.only(
+                            topStart: Radius.circular(Px.getImageCardRadius()),
+                            topEnd: Radius.circular(Px.getImageCardRadius())))),
+                height: 100,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  Source.getCardList()[position].name,
+                  style: TextStyle(
+                      fontFamily: "NerkoOne", color: Colors.blue, fontSize: Px.getImageCardTextSize()),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
