@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -26,24 +27,13 @@ class Px {
     return _height;
   }
 
-  static int getListColumn() {
-    if (_width > 500) {
-      return 4;
-    } else {
-       return 2;
-    }
-  }
-
   static double getTitleHeight() {
-    return _height * 0.2;
+    return min(_height, _width) * 0.18;
   }
 
-  static double getCardHeight() {
-    return _width / getListColumn() * 0.65;
-  }
 
   static double getTitleSize() {
-    return _height * 0.1;
+    return min(_height, _width) * 0.09;
   }
 
   static double getCardPaddingTop() {
@@ -59,7 +49,18 @@ class Px {
   }
 
   static double getImageCardTextSize() {
-    return getTitleHeight() * 0.12;
+    return getTitleSize() * 0.50;
   }
+
+  static double getCardExtent() {
+    if(getWidth() >= 1152){
+      return getWidth() / 4;
+    } if(getWidth() >= 765 && getWidth() < 1152){
+      return getWidth() / 3;
+    }else {
+      return getWidth() / 2;
+    }
+  }
+
 
 }

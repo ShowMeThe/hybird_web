@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hybird_web/util/AlphaRevealRouter.dart';
 import 'ui/Home.dart';
 import 'util/asset.dart';
+import 'util/px.dart';
 
 void main() {
   runApp(MyApp());
@@ -55,8 +56,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = Px.matchWidth(context);
+    var height = Px.matchHeight(context);
     return Scaffold(
       backgroundColor: Colors.black38,
       body: Stack(
@@ -72,7 +73,7 @@ class _SplashPageState extends State<SplashPage> {
           Center(
             child: Container(
               width: width,
-              height: 200,
+              height: Px.getTitleHeight(),
               child: Stack(
                 children: [
                   Hero(
@@ -85,14 +86,16 @@ class _SplashPageState extends State<SplashPage> {
                   ),
                   Container(
                     width: width,
-                    height: height,
-                    child: Text(
-                      "4K HD WallPaper",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.tealAccent,
-                          fontSize: 125,
-                          fontFamily: "SansitaSwashed"),
+                    height: Px.getTitleHeight(),
+                    child: Center(
+                      child: Text(
+                        "4K HD WallPaper",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.tealAccent,
+                            fontSize: Px.getTitleSize(),
+                            fontFamily: "SansitaSwashed"),
+                      ),
                     ),
                   ),
                 ],
