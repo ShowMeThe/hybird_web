@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:ui';
 import 'dart:js' as js;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hybird_web/base/vm/ViewModelProvider.dart';
@@ -174,7 +175,7 @@ class _HomeBodyState extends State<HomeBodyPage> with TickerProviderStateMixin {
               Expanded(
                 child: Container(
                   decoration: ShapeDecoration(
-                      image: DecorationImage(image: NetworkImage(Source.getCardList()[position].imageUrl),fit: BoxFit.fill),
+                      image: DecorationImage(image: CachedNetworkImageProvider(Source.getCardList()[position].imageUrl),fit: BoxFit.fill),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadiusDirectional.only(
                               topStart: Radius.circular(Px.getImageCardRadius()),
